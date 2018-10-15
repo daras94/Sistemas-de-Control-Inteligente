@@ -1,4 +1,4 @@
-function PL1_EJ_01()
+function Ejercicio1_part1()
     global A;
     global B;
     global C;
