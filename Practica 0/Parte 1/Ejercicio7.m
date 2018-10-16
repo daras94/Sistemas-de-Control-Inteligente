@@ -16,14 +16,18 @@ switch apli
     case 'pp'
         polinomio = conv(poli_1, poli_2);
 end
-    %Obtener raices polinomio
-    
-    solucion = roots(polinomio);
-    for i = 1:length(solucion)
-       if isreal(solucion(i))
-           reales = reales + 1;
-       else
-           complejas = complejas + 1;
-       end
-    end
+%Obtener raices polinomio
+
+solucion = roots(polinomio);
+for i = 1:length(solucion)
+   if isreal(solucion(i))
+       reales = reales + 1;
+   else
+       complejas = complejas + 1;
+   end
+end
+str_reales    = sprintf('nº raizez reales %i \n', reales);
+disp(str_reales);
+str_complejas = sprintf('nº raizez complejas %i \n', complejas);
+disp(str_complejas);
 end
