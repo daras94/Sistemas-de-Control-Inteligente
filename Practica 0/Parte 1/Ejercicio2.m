@@ -24,5 +24,7 @@ for x = 1:dim
     scatter(x, var(M(x,:)), 'v', 'g');
     scatter(x, max(M(x,:)), 'o', 'b');
 end 
+legend("minimo", "media", "varianza", "maximo");
+xlabel('nº de filas');
 axis([0 dim -inf inf]);
 hold off;

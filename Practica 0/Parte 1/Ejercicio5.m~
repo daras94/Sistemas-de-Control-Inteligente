@@ -56,27 +56,18 @@ linSolA2_r = linsolve(A2,b2);
 
 %Apartado c
 disp(' - A1*b1 calculado mediante pinv es =');
-disp(' =======================================================');
+disp(' =======================================');
 disp(pinvSolA1);
-disp(' - A1*b1 calculado mediante pinv (con ruido en b1) es = ');
-disp(' =======================================================');
-disp(pinvSolA1_r);
+disp(' - A1*b1 calculado mediante pinv  es =');
+disp(' =======================================');
+disp(pinvSolA1);
 disp(' - A2*b2 calculado mediante pinv es =');
-disp(' =======================================================');
+disp(' =======================================');
 disp(pinvSolA2);
-disp(' - A2*b2 calculado mediante pinv (con ruido en b2) es =' );
-disp(' =======================================================');
-disp(pinvSolA2_r);
 
 disp(' - A1*b1 calculado mediante linsolve es =');
-disp(' =======================================================');
+disp(' =======================================');
 disp(linSolA1);
-disp(' - A1*b1 calculado mediante linsolve (con ruido en b1) es =');
-disp(' =======================================================');
-disp(linSolA1_r);
 disp(' - A2*b2 calculado mediante linsolve es =');
-disp(' =======================================================');
+disp(' =======================================');
 disp(linSolA2);
-disp(' - A2*b2 calculado mediante linsolve (con ruido en b2) es =');
-disp(' =======================================================');
-disp(linSolA2_r);
