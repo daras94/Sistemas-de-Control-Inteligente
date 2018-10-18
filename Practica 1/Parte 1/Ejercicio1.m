@@ -32,7 +32,7 @@ net2.divideParam.testRatio  = 15/100; % Conjunto de test x2.
 % ----------------------------------------------------
 % Mostramos la grafica del conjunto de entrenamiento.
 % ----------------------------------------------------
-figure;
+figure('rend','painters','pos',[0 0 1000 420])
 hold on;
 subplot(1, 2, 1), plotpv(x1, t1), plotpc(net1.IW{1}, net1.b{1}), title('Vector de clasificacion (origin date)');
 subplot(1, 2, 2), plotpv(x2, t2), plotpc(net2.IW{1}, net2.b{1}), title('Vector de clasificacion (add date)');
