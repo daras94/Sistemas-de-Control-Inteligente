@@ -1,0 +1,57 @@
+[System]
+Name='penduloinvdoc'
+Type='mamdani'
+Version=2.0
+NumInputs=4
+NumOutputs=1
+NumRules=5
+AndMethod='min'
+OrMethod='max'
+ImpMethod='min'
+AggMethod='max'
+DefuzzMethod='centroid'
+
+[Input1]
+Name='θ'
+Range=[-0.3 0.3]
+NumMFs=2
+MF1='neg':'trimf',[-0.9 -0.3 0.3]
+MF2='pos':'trimf',[-0.3 0.3 0.9]
+
+[Input2]
+Name='θ̇'
+Range=[-1 1]
+NumMFs=2
+MF1='neg':'trimf',[-2 -1 1]
+MF2='pos':'trimf',[-1 1 2]
+
+[Input3]
+Name='x1'
+Range=[-3 3]
+NumMFs=2
+MF1='neg':'trimf',[-9 -3 3]
+MF2='pos':'trimf',[-3 3 9]
+
+[Input4]
+Name='x2'
+Range=[-3 3]
+NumMFs=2
+MF1='neg':'trimf',[-9 -3 3]
+MF2='pos':'trimf',[-3 3 9]
+
+[Output1]
+Name='F'
+Range=[-20 20]
+NumMFs=5
+MF1='NG':'trimf',[-30.05 -19.95 -9.05]
+MF2='N':'trimf',[-20 -10 0]
+MF3='Z':'trimf',[-10 -1.11e-16 10]
+MF4='P':'trimf',[0 10 20]
+MF5='PG':'trimf',[9.05 19.95 30.05]
+
+[Rules]
+2 2 1 2, 5 (1) : 1
+1 2 1 1, 1 (1) : 1
+1 1 2 2, 2 (1) : 1
+2 2 2 2, 4 (1) : 1
+2 2 2 1, 5 (1) : 1
