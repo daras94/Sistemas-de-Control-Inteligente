@@ -4,7 +4,7 @@ Type='mamdani'
 Version=2.0
 NumInputs=4
 NumOutputs=1
-NumRules=12
+NumRules=9
 AndMethod='min'
 OrMethod='max'
 ImpMethod='min'
@@ -29,15 +29,15 @@ MF2='pos':'trapmf',[-0.8 0.8 1.1 1.9]
 Name='x1'
 Range=[-3 3]
 NumMFs=2
-MF1='neg':'trapmf',[-8 -4 -2 2]
-MF2='pos':'trapmf',[-2 2 4 8]
+MF1='neg':'trapmf',[-8.4 -3.6 -2.4 2.4]
+MF2='pos':'trapmf',[-2.4 2.4 3.6 8.4]
 
 [Input4]
 Name='x2'
 Range=[-3 3]
 NumMFs=2
-MF1='pos':'trapmf',[-2 2 4 8]
-MF2='neg':'trapmf',[-8 -4 -2 2]
+MF1='pos':'trapmf',[-2.4 2.4 3.6 8.4]
+MF2='neg':'trapmf',[-8.4 -3.6 -2.4 2.4]
 
 [Output1]
 Name='F'
@@ -56,9 +56,6 @@ MF5='PG':'trapmf',[5 10 20 25]
 1 2 1 2, 1 (1) : 1
 1 1 1 1, 2 (1) : 1
 1 1 1 2, 3 (1) : 1
-2 2 2 1, 5 (1) : 1
-2 2 2 2, 4 (1) : 1
+2 2 2 1, 4 (1) : 1
+2 2 2 2, 3 (1) : 1
 2 1 2 1, 3 (1) : 1
-1 2 2 2, 1 (1) : 1
-1 1 2 1, 2 (1) : 1
-1 1 2 2, 3 (1) : 1
