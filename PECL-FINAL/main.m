@@ -13,7 +13,7 @@ while 1
                     %% ==================================================
                     %              { INICIALIZACIÓN DE ROS }
                     %  ==================================================
-                    setenv('ROS_MASTER_URI','http://192.168.1.135:11311'); % La IP MV.
+                    setenv('ROS_MASTER_URI','http://192.168.1.136:11311'); % La IP MV.
                     setenv('ROS_IP','192.168.1.132');                      % La IP HOST.
                     rosinit()                                              % Iniciamos ROS.                          % Inicializacion de ROS en la IP correspondiente
                     miniproyectoSCI()
@@ -25,6 +25,8 @@ while 1
                        %               { DESCONEXIÓN DE ROS }
                        %  ==============================================
                        rosshutdown;
+                       rethrow(ex);
+                       break;
                    end
                end
             end

@@ -4,7 +4,7 @@ Type='mamdani'
 Version=2.0
 NumInputs=2
 NumOutputs=1
-NumRules=0
+NumRules=1
 AndMethod='min'
 OrMethod='max'
 ImpMethod='min'
@@ -42,3 +42,4 @@ MF4='P':'trimf',[0 0.2 0.4]
 MF5='PG':'trapmf',[0.2 0.4 0.6 0.8]
 
 [Rules]
+2 2, 1 (1) : 1
