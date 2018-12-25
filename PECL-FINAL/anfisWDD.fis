@@ -4,7 +4,7 @@ Type='mamdani'
 Version=2.0
 NumInputs=8
 NumOutputs=1
-NumRules=7
+NumRules=6
 AndMethod='min'
 OrMethod='max'
 ImpMethod='min'
@@ -14,11 +14,9 @@ DefuzzMethod='centroid'
 [Input1]
 Name='SONAR0'
 Range=[0.1 5]
-NumMFs=3
-MF1='C':'trapmf',[-2.4 0.1 1 2.5]
-MF2='M':'trimf',[1 2.5 4]
-MF3='L':'trapmf',[2.5 4 5 7.5]
-
+NumMFs=2
+MF1='C':'trimf',[-4.8 0.1 5]
+MF2='L':'trimf',[0.1 5 9.9]
 
 [Input2]
 Name='SONAR1'
@@ -31,18 +29,16 @@ MF3='L':'trapmf',[2.5 4 5 7.5]
 [Input3]
 Name='SONAR2'
 Range=[0.1 5]
-NumMFs=3
-MF1='C':'trapmf',[-2.4 0.1 1 2.5]
-MF2='M':'trimf',[1 2.5 4]
-MF3='L':'trapmf',[2.5 4 5 7.5]
+NumMFs=2
+MF1='C':'trimf',[-4.8 0.1 5]
+MF2='L':'trimf',[0.1 5 9.9]
 
 [Input4]
 Name='SONAR3'
 Range=[0.1 5]
-NumMFs=3
-MF1='C':'trapmf',[-2.4 0.1 1 2.5]
-MF2='M':'trimf',[1 2.5 4]
-MF3='L':'trapmf',[2.5 4 5 7.5]
+NumMFs=2
+MF1='C':'trimf',[-4.8 0.1 5]
+MF2='L':'trimf',[0.1 5 9.9]
 
 [Input5]
 Name='SONAR4'
@@ -55,10 +51,9 @@ MF3='L':'trapmf',[2.5 4 5 7.5]
 [Input6]
 Name='SONAR5'
 Range=[0.1 5]
-NumMFs=3
-MF1='C':'trapmf',[-2.4 0.1 1 2.5]
-MF2='M':'trimf',[1 2.5 4]
-MF3='L':'trapmf',[2.5 4 5 7.5]
+NumMFs=2
+MF1='C':'trimf',[-4.8 0.1 5]
+MF2='L':'trimf',[0.1 5 9.9]
 
 [Input7]
 Name='SONAR6'
@@ -87,10 +82,9 @@ MF4='P':'trimf',[0 0.2 0.4]
 MF5='PG':'trapmf',[0.2 0.4 0.6 0.8]
 
 [Rules]
-3 1 0 0 1 0 0 0, 1 (1) : 1
-0 1 0 0 1 3 0 0, 5 (1) : 1
 0 1 0 0 2 0 0 0, 2 (1) : 1
 0 2 0 0 1 0 0 0, 4 (1) : 1
-0 3 0 0 2 0 0 0, 4 (1) : 1
+0 2 0 0 2 0 0 0, 3 (1) : 1
 0 2 0 0 3 0 0 0, 1 (1) : 1
-0 3 0 0 3 0 0 0, 5 (1) : 1 
+0 3 0 0 2 0 0 0, 5 (1) : 1
+1 0 0 0 0 1 0 0, 3 (1) : 1

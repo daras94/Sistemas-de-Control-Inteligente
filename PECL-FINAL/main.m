@@ -25,6 +25,7 @@ while 1
                        %               { DESCONEXIÓN DE ROS }
                        %  ==============================================
                        rosshutdown;
+                       %%
                        rethrow(ex);
                        break;
                    end

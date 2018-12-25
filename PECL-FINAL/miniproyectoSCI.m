@@ -102,14 +102,14 @@ function miniproyectoSCI()
                 distance(1, j) = 5.0;
             end
         end
-        d1 = distance(1, 2);
-        d4 = distance(1, 5);
+%         d1 = distance(1, 2);
+%         d4 = distance(1, 5);
         % ------------------------------------------------------------
         % Obtencion de la velocidad lineal y angular a partir de los 
         % controladores borrosos.
         % ------------------------------------------------------------
         vel_lineal = 0.2; % evalfis([d1 d4], fismatV);
-        vel_ang    = evalfis([d1 d4], fismatW);
+        vel_ang    = evalfis(distance, fismatW);
         if (vel_lineal < 0.1)
             msg.Linear.X = 0.05;
         else
