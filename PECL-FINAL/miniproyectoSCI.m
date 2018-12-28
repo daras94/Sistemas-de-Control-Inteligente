@@ -37,8 +37,8 @@ function miniproyectoSCI()
     %% ===================================================================
     % Lectura de los controladores borrosos
     % ====================================================================
-    % fismatV = readfis('./controller/fuzzy/anfisV2.fix');                % Controlador de velocidad lineal
-    fismatW = readfis('./controller/fuzzy/anfisWDD.fis');                 % Controlador de velocidad angular
+    % fismatV = readfis('./controller/fuzzy/anfisV2.fis');                % Controlador de velocidad lineal
+    fismatW = readfis('./controller/fuzzy/anfisWDD_v2.fis');              % Controlador de velocidad angular
 
     %% Rellenamos los campos del mensaje para que el robot avance a 0.2 m/s
     %
@@ -99,36 +99,42 @@ function miniproyectoSCI()
             % ---------------------------------------------------
             distance(1, j) = double(msg_sonars{1, j}.Range_);
             if (isinf(distance(1, j)))
-                distance(1, j) = 5.0;
+                if (distance(1, j) > 0)
+                    distance(1, j) = 4.5;
+                else
+                    distance(1, j) = 0.1;
+                end
             end
         end
-%         d1 = distance(1, 2);
-%         d4 = distance(1, 5);
+        d2 = distance(1, 3);
+        d3 = distance(1, 4);
+        in_c1 = distance(1, 2) - distance(1, 5);
+        in_c2 = distance(1, 1) - distance(1, 6);     
         % ------------------------------------------------------------
         % Obtencion de la velocidad lineal y angular a partir de los 
         % controladores borrosos.
         % ------------------------------------------------------------
-        vel_lineal = 0.2; % evalfis([d1 d4], fismatV);
-        vel_ang    = evalfis(distance, fismatW);
+%         vel_lineal = 0.2; % evalfis([d2, d3, in_c1, in_c2], fismatV);
+        output     = evalfis([d2, d3, in_c1, in_c2], fismatW);
+        vel_ang    = output(1, 1);
+        vel_lineal = output(1, 2);
         if (vel_lineal < 0.1)
             msg.Linear.X = 0.05;
         else
             msg.Linear.X = vel_lineal;
         end
-        if (vel_ang > 0) && (vel_ang < 0.01)
-            msg.Angular.Z = 0.0;
-        elseif (vel_ang < 0) && (vel_ang > -0.01)
+        if (vel_ang > -0.01) && (vel_ang < 0.01)
             msg.Angular.Z = 0.0;
         else
             msg.Angular.Z = vel_ang;
         end
-        disp([distance, msg.Linear.X, msg.Angular.Z]);
+        disp([d2, d3, in_c1, in_c2, msg.Linear.X, msg.Angular.Z]);
         send(pub, msg);                                  % Envio de la velocidad
         waitfor(r);                                      % Temporizaci�n del bucle seg�n el par�metro establecido en r
     end
     %% DESACTIVACI�N DE LOS MOTORES
     %   Desactivar motores enviando enable_motor = 0
     %  ===================================================================
-    % msg_enable_motor.Data = 0;
-    % send(pub_enable,msg_enable_motor);
+%     msg_enable_motor.Data = 0;
+%     send(pub_enable,msg_enable_motor);
 end
