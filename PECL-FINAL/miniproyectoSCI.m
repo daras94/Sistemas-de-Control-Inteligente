@@ -6,9 +6,8 @@ function miniproyectoSCI()
     % Para el robot real
     % ------------------------------------------------------------------------
     % odom  = rossubscriber('/pose');                               % Subscripci�n a la odometr�a
-    % laser = rossu
-    % bscriber('/robot0/laser_1', rostype.sensor_msgs_LaserScan);
-    % laser = rossubscriber('/robot0/scan', rostype.sensor_msgs_LaserScan);
+    laser = rossubscriber('/robot0/laser_1', rostype.sensor_msgs_LaserScan);
+    %laser = rossubscriber('/robot0/scan', rostype.sensor_msgs_LaserScan);
 
     % Incialzacion del sonar.
     % ------------------------------------------------------------------------
@@ -22,14 +21,14 @@ function miniproyectoSCI()
     %% DECLARACIÓN DE PUBLISHERS
     % ========================================================================
     pub = rospublisher('/robot0/cmd_vel', 'geometry_msgs/Twist');      %
-    % pub_enable = rospublisher('/cmd_motor_state', 'std_msgs/Int32'); % Para el robot real
-
+    % pub_enable = rospublisher('/cmd_motor_state', 'std_msgs/Int32'); % Para el robot real 
+    
     %% GENERACIÓN DE MENSAJE
     % ========================================================================
     msg = rosmessage(pub);                                             %% Creamos un mensaje del tipo declarado en "pub" (geometry_msgs/Twist)
                                                                        %  Rellenamos los campos del mensaje para que el robot avance a 0.2 m/s
     % msg_enable_motor      = rosmessage(pub_enable);
-    % msg_laser             = rosmessage(laser);
+    msg_laser                = rosmessage(laser);
     msg_sonars{1, num_sonar} = {};
     for i = 1 : num_sonar 
         msg_sonars{1, i} = rosmessage(sonars{1, i});
@@ -76,7 +75,7 @@ function miniproyectoSCI()
         % while (strcmp(odom.LatestMessage.ChildFrameId,'base_link')~=1)
         odom.LatestMessage
     end
-
+    
     %% ===================================================================
     % Inicializamos la primera posición (coordenadas x,y,z)
     %  ===================================================================
@@ -92,6 +91,7 @@ function miniproyectoSCI()
         % --------------------------------------------------------
         %Obtenemos la lectura de los sonares y el laser
         % --------------------------------------------------------
+        msg_laser = receive(laser);       
         for j = 1 : length(sonars)
             msg_sonars{1, j} = receive(sonars{1, j});
             % ---------------------------------------------------
@@ -109,7 +109,8 @@ function miniproyectoSCI()
         d2 = distance(1, 3);
         d3 = distance(1, 4);
         in_c1 = distance(1, 2) - distance(1, 5);
-        in_c2 = distance(1, 1) - distance(1, 6);     
+        in_c2 = distance(1, 1) - distance(1, 6);   
+    
         % ------------------------------------------------------------
         % Obtencion de la velocidad lineal y angular a partir de los 
         % controladores borrosos.
