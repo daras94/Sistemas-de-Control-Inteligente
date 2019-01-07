@@ -14,9 +14,9 @@ while 1
                     %              { INICIALIZACIÓN DE ROS }
                     %  ==================================================
                     setenv('ROS_MASTER_URI','http://192.168.1.136:11311'); % La IP MV.
-                    setenv('ROS_IP','192.168.1.132');                      % La IP HOST.
-                    rosinit()                                              % Iniciamos ROS.                          % Inicializacion de ROS en la IP correspondiente
-                    miniproyectoSCI()
+                    setenv('ROS_IP','192.168.1.128');                      % La IP HOST.
+                    rosinit();                                              % Iniciamos ROS.                          % Inicializacion de ROS en la IP correspondiente
+                    miniproyectoSCI();
                catch ex
                    if (strcmp(ex.identifier,'robotics:ros:node:GlobalNodeRunningError'))
                        miniproyectoSCI() 
