@@ -1,0 +1,53 @@
+[System]
+Name='vel_lin_1-4'
+Type='sugeno'
+Version=2.0
+NumInputs=2
+NumOutputs=1
+NumRules=9
+AndMethod='prod'
+OrMethod='probor'
+ImpMethod='prod'
+AggMethod='sum'
+DefuzzMethod='wtaver'
+
+[Input1]
+Name='input1'
+Range=[0.516916 5]
+NumMFs=3
+MF1='in1mf1':'trapmf',[-1.0521634 -0.1555466 0.988557995927171 2.98505638167976]
+MF2='in1mf2':'trapmf',[0.666103580147776 1.40229653155704 1.6016500343293 4.67217956018498]
+MF3='in1mf3':'trapmf',[1.37895550755692 3.05960480478859 5.6724626 6.5690794]
+
+[Input2]
+Name='input2'
+Range=[0.458978 5]
+NumMFs=3
+MF1='in2mf1':'trapmf',[-1.1303797 -0.2221753 0.20339027699147 2.7320292744399]
+MF2='in2mf2':'trapmf',[0.703848425164003 1.36988912362354 2.25500439573879 4.63842745374469]
+MF3='in2mf3':'trapmf',[1.29781810011306 3.06683805289264 5.6811533 6.5893577]
+
+[Output1]
+Name='output'
+Range=[0.014744 1.092659]
+NumMFs=9
+MF1='out1mf1':'constant',[0.065075702252206]
+MF2='out1mf2':'constant',[0.0366647336441198]
+MF3='out1mf3':'constant',[0.0422278920022033]
+MF4='out1mf4':'constant',[0.0325290288591091]
+MF5='out1mf5':'constant',[0.604458182667691]
+MF6='out1mf6':'constant',[0.345445598442711]
+MF7='out1mf7':'constant',[0.0662643156825532]
+MF8='out1mf8':'constant',[0.228852028111074]
+MF9='out1mf9':'constant',[1.05658007710316]
+
+[Rules]
+1 1, 1 (1) : 1
+1 2, 2 (1) : 1
+1 3, 3 (1) : 1
+2 1, 4 (1) : 1
+2 2, 5 (1) : 1
+2 3, 6 (1) : 1
+3 1, 7 (1) : 1
+3 2, 8 (1) : 1
+3 3, 9 (1) : 1
