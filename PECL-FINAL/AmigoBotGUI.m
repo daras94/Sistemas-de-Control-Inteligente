@@ -138,8 +138,8 @@ function start_Callback(hObject, eventdata, handles)
             path_ctrl_vel = './controller/neuro/vel_lin_1234h.fis';
             path_ctrl_ang = './controller/neuro/vel_angu_1234h.fis';
         case 4
-            path_ctrl_vel = './controller/neuro/vel_lin_1234h.fis';
-            path_ctrl_ang = './controller/neuro/vel_angu_1234h.fis';
+            path_ctrl_vel = './controller/neuro/vel_lin_0145.fis';
+            path_ctrl_ang = './controller/neuro/vel_angu_0145.fis';
         case 5
             path_ctrl_vel = './controller/neuro/vel_lin_012345.fis';
             path_ctrl_ang = './controller/neuro/vel_angu_012345.fis';
@@ -226,16 +226,16 @@ function start_Callback(hObject, eventdata, handles)
         % ------------------------------------------------------------
         vel_ang    = evalfis(fismat_ang, input_dist);
         vel_lineal = evalfis(fismat_vel, input_dist);
-        if (vel_lineal < 0.1)
-            msg.Linear.X = 0.05;
-        else
+%         if (vel_lineal < 0.1)
+%             msg.Linear.X = 0.05;
+%         else
             msg.Linear.X = vel_lineal;
-        end
-        if (vel_ang > -0.01) && (vel_ang < 0.01)
-            msg.Angular.Z = 0.0;
-        else
+%         end
+%         if (vel_ang > -0.01) && (vel_ang < 0.01)
+%             msg.Angular.Z = 0.0;
+%         else
             msg.Angular.Z = vel_ang;
-        end
+%         end
         send(pub, msg);     % Envio de la velocidad angular y lineal
         if isappdata(handles.figure1,'stop_bot')
             msg.Linear.X  = 0;
@@ -244,9 +244,9 @@ function start_Callback(hObject, eventdata, handles)
             break
         else
             disp([input_dist, msg.Linear.X, msg.Angular.Z]);
-            for i = 1 : length(input_dist)
-                set(aux_labels{i},  'String', num2str(input_dist(i)));
-            end
+%             for i = 1 : length(input_dist)
+%                 set(aux_labels{i},  'String', num2str(input_dist(i)));
+%             end
             set(handles.tx_vl,  'String', num2str(msg.Linear.X));
             set(handles.tx_va,  'String', num2str(msg.Angular.Z));
             waitfor(r);     % Temporizacion del bucle segun el valor de r 
@@ -414,8 +414,8 @@ function ed_ctrl_Callback(hObject, eventdata, handles)
             anfisedit ./controller/neuro/vel_lin_1234p.fis;
             anfisedit ./controller/neuro/vel_angu_1234p.fis;
         case 4
-            anfisedit ./controller/neuro/vel_lin_1234p.fis;
-            anfisedit ./controller/neuro/vel_angu_1234p.fis;
+            anfisedit ./controller/neuro/vel_lin_0145.fis;
+            anfisedit ./controller/neuro/vel_angu_0145.fis;
     end
 % ========================================================================
 
@@ -431,7 +431,7 @@ function selct_ctr_CreateFcn(hObject, eventdata, handles)
     if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
         set(hObject,'BackgroundColor','white');
     end
-    select_ctrl = {"Mandani 4 IN", "Sugeno 2 IN", "Sugeno 4 IN (1)", "Sugeno 4 IN (2)", "Sugeno 6"};
+    select_ctrl = {"Mandani 4 IN", "Sugeno 2 IN", "Sugeno 4 IN (1)", "Sugeno 4 IN (2)", "Sugeno 6 IN"};
     set(hObject,"String", select_ctrl);
 % ========================================================================
 
