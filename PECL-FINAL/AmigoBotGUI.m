@@ -401,9 +401,16 @@ function ed_ctrl_Callback(hObject, eventdata, handles)
     switch (opc)
         case 1
             fuzzy ./controller/fuzzy/anfisWDD_4IN.fis;
-            fuzzy ./controller/fuzzy/anfisV2_4IN.fis
-        case {2, 3, 4}
-
+            fuzzy ./controller/fuzzy/anfisV2_4IN.fis;
+        case 2
+            anfisedit ./controller/neuro/vel_lin_1-4.fis;
+            anfisedit ./controller/neuro/vel_angu_1-4.fis;
+        case 3
+            anfisedit ./controller/neuro/vel_lin_1234.fis;
+            anfisedit ./controller/neuro/vel_angu_1234.fis;
+        case 4
+            anfisedit ./controller/neuro/vel_lin_0145.fis;
+            anfisedit ./controller/neuro/vel_angu_0145.fis;
     end
 % ========================================================================
 
