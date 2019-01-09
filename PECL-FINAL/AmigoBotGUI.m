@@ -135,8 +135,8 @@ function start_Callback(hObject, eventdata, handles)
             path_ctrl_vel = './controller/neuro/vel_lin_1-4.fis';
             path_ctrl_ang = './controller/neuro/vel_angu_1-4.fis';
         case 3
-            path_ctrl_vel = './controller/neuro/vel_lin_1234.fis';
-            path_ctrl_ang = './controller/neuro/vel_angu_1234.fis';
+            path_ctrl_vel = './controller/neuro/vel_lin_1234h.fis';
+            path_ctrl_ang = './controller/neuro/vel_angu_1234h.fis';
         case 4
             path_ctrl_vel = './controller/neuro/vel_lin_0145.fis';
             path_ctrl_ang = './controller/neuro/vel_angu_0145.fis';
@@ -349,7 +349,7 @@ function ip_host_CreateFcn(hObject, eventdata, handles)
         [~, result]  = system('ifconfig | sed -En "s/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p"');
     elseif ispc
         [~, result]  = system('ipconfig | findstr /r "IPv4.*[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*"');
-		result       = replace(result,'   Dirección IPv4. . . . . . . . . . . . . . : ','');
+		result       = replace(result,'   Direcciï¿½n IPv4. . . . . . . . . . . . . . : ','');
     else
         disp('Platform not supported')
     end
