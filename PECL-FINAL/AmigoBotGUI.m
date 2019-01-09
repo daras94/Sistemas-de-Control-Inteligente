@@ -129,11 +129,17 @@ function start_Callback(hObject, eventdata, handles)
     opc = handles.selct_ctr.Value;
     switch (opc)
         case 1
-            path_ctrl = './controller/fuzzy/anfisWDD_v2.fis';
+            path_ctrl_vel = './controller/fuzzy/anfisV2_4IN.fis';
+            path_ctrl_ang = './controller/fuzzy/anfisWDD_4IN.fis';
         case 2
-            path_ctrl = '';
+            path_ctrl_vel = './controller/neuro/anfisV2_2IN.fis';
+            path_ctrl_ang = './controller/neuro/anfisWDD_2IN.fis';
+        case 3
+            path_ctrl_vel = './controller/neuro/anfisV2_4IN.fis';
+            path_ctrl_ang = './controller/neuro/anfisWDD_4IN.fis';
     end
-    fismat = readfis(path_ctrl);
+    fismat_vel = readfis(path_ctrl_vel);
+    fismat_ang = readfis(path_ctrl_ang);
     % -------------------------------------------------------------------
     % Velocidades lineales en x,y y z (velocidades en y o z no se usan en 
     % robots diferenciales y entornos 2D).
@@ -169,7 +175,8 @@ function start_Callback(hObject, eventdata, handles)
     % --------------------------------------------------------------------
     %%      Bucle de control finaliza al pulsar el botton parar.
     % --------------------------------------------------------------------
-    distance = zeros(1, num_sonar);
+    distance   = zeros(1, num_sonar);
+    aux_labels = {handles.tx_d2, handles.tx_d3, handles.tx_d25, handles.tx_d16};
     while (1)
         % --------------------------------------------------------
         %Obtenemos la lectura de los sonares y el laser
@@ -182,24 +189,33 @@ function start_Callback(hObject, eventdata, handles)
             % ---------------------------------------------------
             distance(1, j) = double(msg_sonars{1, j}.Range_);
             if (isinf(distance(1, j)))
-                if (distance(1, j) > 5)
-                    distance(1, j) = 5;
+                if (distance(1, j) > 0)
+                    distance(1, j) = 5.0;
                 else
-                    distance(1, j) = 0.1;
+                    distance(1, j) = 0.0;
                 end
             end
         end
+        d0 = distance(1, 1);
+        d1 = distance(1, 2);
         d2 = distance(1, 3);
         d3 = distance(1, 4);
-        in_c1 = distance(1, 2) - distance(1, 5);
-        in_c2 = distance(1, 1) - distance(1, 6);     
+        d4 = distance(1, 5);
+        d5 = distance(1, 6);
+        switch (opc)
+            case 1
+                input_dist = [d2, d3, d1 - d4, d0 - d5];
+            case 2
+                input_dist = [d1, d4];
+            case 3
+                input_dist = [d1, d2, d3, d4];
+        end   
         % ------------------------------------------------------------
         % Obtencion de la velocidad lineal y angular a partir de los 
         % controladores borrosos.
         % ------------------------------------------------------------
-        output        = evalfis(fismat, [d2, d3, in_c1, in_c2]);
-        vel_ang    = output(1, 1);
-        vel_lineal = output(1, 2);
+        vel_ang    = evalfis(fismat_ang, input_dist);
+        vel_lineal = evalfis(fismat_vel, input_dist);
         if (vel_lineal < 0.1)
             msg.Linear.X = 0.05;
         else
@@ -217,11 +233,10 @@ function start_Callback(hObject, eventdata, handles)
             send(pub, msg);     % Envio de la velocidad angular y lineal
             break
         else
-            disp([d2, d3, in_c1, in_c2, msg.Linear.X, msg.Angular.Z]);
-            set(handles.tx_d2,  'String', num2str(d2));
-            set(handles.tx_d3,  'String', num2str(d3));
-            set(handles.tx_d25, 'String', num2str(in_c1));
-            set(handles.tx_d16, 'String', num2str(in_c2));
+            disp([input_dist, msg.Linear.X, msg.Angular.Z]);
+            for i = 1 : length(input_dist)
+                set(aux_labels{i},  'String', num2str(input_dist(i)));
+            end
             set(handles.tx_vl,  'String', num2str(msg.Linear.X));
             set(handles.tx_va,  'String', num2str(msg.Angular.Z));
             waitfor(r);     % Temporizacion del bucle segun el valor de r 
@@ -325,7 +340,14 @@ function ip_host_CreateFcn(hObject, eventdata, handles)
     if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
         set(hObject,'BackgroundColor','white');
     end
-    [~, result]  = system('ifconfig | sed -En "s/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p"');
+    if ismac  || isunix
+        [~, result]  = system('ifconfig | sed -En "s/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p"');
+    elseif ispc
+        [~, result]  = system('ipconfig | findstr /r "IPv4.*[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*"');
+		result       = strrep(result,'   Dirección IPv4. . . . . . . . . . . . . . : ','')
+    else
+        disp('Platform not supported')
+    end
     match_carrie = cat(2, [0], regexp(result, '[\n]'));
     lenght_ip    = length(match_carrie);
     if  (lenght_ip > 1)
@@ -373,8 +395,10 @@ function ed_ctrl_Callback(hObject, eventdata, handles)
     opc = handles.selct_ctr.Value;
     switch (opc)
         case 1
-            fuzzy ./controller/fuzzy/anfisWDD_v2.fis;
-        case 2
+            fuzzy ./controller/fuzzy/anfisWDD_4IN.fis;
+            fuzzy ./controller/fuzzy/anfisV2_4IN.fis
+        case 3
+        case 4
 
     end
 % ========================================================================
@@ -391,7 +415,7 @@ function selct_ctr_CreateFcn(hObject, eventdata, handles)
     if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
         set(hObject,'BackgroundColor','white');
     end
-    select_ctrl = {"Mandani", "Sugeno"};
+    select_ctrl = {"Mandani 4 IN", "Sugeno 2 IN", "Sugeno 4 IN"};
     set(hObject,"String", select_ctrl);
 % ========================================================================
 
@@ -402,6 +426,7 @@ function connect_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 %% ========================================================================
 hist_items = handles.hist.String;
+global msg_com;
 try
     rosinit();  % Inicializacion de ROS en la IP correspondiente
     set(handles.shutdown,'Enable','on');
