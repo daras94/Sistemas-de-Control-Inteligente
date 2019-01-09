@@ -349,7 +349,7 @@ function ip_host_CreateFcn(hObject, eventdata, handles)
         [~, result]  = system('ifconfig | sed -En "s/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p"');
     elseif ispc
         [~, result]  = system('ipconfig | findstr /r "IPv4.*[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*"');
-		result       = strrep(result,'   Dirección IPv4. . . . . . . . . . . . . . : ','')
+		result       = replace(result,'   Dirección IPv4. . . . . . . . . . . . . . : ','');
     else
         disp('Platform not supported')
     end
