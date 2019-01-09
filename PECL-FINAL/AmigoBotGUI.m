@@ -224,18 +224,16 @@ function start_Callback(hObject, eventdata, handles)
         % Obtencion de la velocidad lineal y angular a partir de los 
         % controladores borrosos.
         % ------------------------------------------------------------
-        vel_ang    = evalfis(fismat_ang, input_dist);
-        vel_lineal = evalfis(fismat_vel, input_dist);
-%         if (vel_lineal < 0.1)
+        msg.Angular.Z = evalfis(fismat_ang, input_dist);
+        msg.Linear.X  = evalfis(fismat_vel, input_dist);
+%         if (msg.Linear.X < 0.1)
 %             msg.Linear.X = 0.05;
-%         else
-            msg.Linear.X = vel_lineal;
 %         end
-%         if (vel_ang > -0.01) && (vel_ang < 0.01)
-%             msg.Angular.Z = 0.0;
-%         else
-            msg.Angular.Z = vel_ang;
-%         end
+        if (msg.Angular.Z > 0) && (msg.Angular.Z < 0.01)
+            msg.Angular.Z = 0.0;
+        elseif (msg.Angular.Z < 0) && (msg.Angular.Z > -0.01)
+            msg.Angular.Z = 0.0;
+        end
         send(pub, msg);     % Envio de la velocidad angular y lineal
         if isappdata(handles.figure1,'stop_bot')
             msg.Linear.X  = 0;
