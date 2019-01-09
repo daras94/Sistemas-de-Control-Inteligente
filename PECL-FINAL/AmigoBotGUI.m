@@ -349,7 +349,7 @@ function ip_host_CreateFcn(hObject, eventdata, handles)
         [~, result]  = system('ifconfig | sed -En "s/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p"');
     elseif ispc
         [~, result]  = system('ipconfig | findstr /r "IPv4.*[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*"');
-		result       = replace(result,'   Direcci\x00D3n IPv4. . . . . . . . . . . . . . : ','');
+		result       = replace(result,'   Dirección IPv4. . . . . . . . . . . . . . : ','');
     else
         disp('Platform not supported')
     end
@@ -406,11 +406,11 @@ function ed_ctrl_Callback(hObject, eventdata, handles)
             anfisedit ./controller/neuro/vel_lin_1-4.fis;
             anfisedit ./controller/neuro/vel_angu_1-4.fis;
         case 3
-            anfisedit ./controller/neuro/vel_lin_1234.fis;
-            anfisedit ./controller/neuro/vel_angu_1234.fis;
+            anfisedit ./controller/neuro/vel_lin_1234p.fis;
+            anfisedit ./controller/neuro/vel_angu_1234p.fis;
         case 4
-            anfisedit ./controller/neuro/vel_lin_0145.fis;
-            anfisedit ./controller/neuro/vel_angu_0145.fis;
+            anfisedit ./controller/neuro/vel_lin_1234p.fis;
+            anfisedit ./controller/neuro/vel_angu_1234p.fis;
     end
 % ========================================================================
 
