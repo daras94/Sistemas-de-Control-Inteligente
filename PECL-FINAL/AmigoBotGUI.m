@@ -135,11 +135,14 @@ function start_Callback(hObject, eventdata, handles)
             path_ctrl_vel = './controller/neuro/vel_lin_1-4.fis';
             path_ctrl_ang = './controller/neuro/vel_angu_1-4.fis';
         case 3
-            path_ctrl_vel = './controller/neuro/vel_lin_1234.fis';
-            path_ctrl_ang = './controller/neuro/vel_angu_1234.fis';
+            path_ctrl_vel = './controller/neuro/vel_lin_1234h.fis';
+            path_ctrl_ang = './controller/neuro/vel_angu_1234h.fis';
         case 4
-            path_ctrl_vel = './controller/neuro/vel_lin_0145.fis';
-            path_ctrl_ang = './controller/neuro/vel_angu_0145.fis';
+            path_ctrl_vel = './controller/neuro/vel_lin_1234h.fis';
+            path_ctrl_ang = './controller/neuro/vel_angu_1234h.fis';
+        case 5
+            path_ctrl_vel = './controller/neuro/vel_lin_012345.fis';
+            path_ctrl_ang = './controller/neuro/vel_angu_012345.fis';
     end
     fismat_vel = readfis(path_ctrl_vel);
     fismat_ang = readfis(path_ctrl_ang);
@@ -214,6 +217,8 @@ function start_Callback(hObject, eventdata, handles)
                 input_dist = [d1, d2, d3, d4];
             case 4
                 input_dist = [d0, d1, d4, d5];
+            case 5
+                input_dist = [d0, d1, d2, d3, d4, d5];
         end   
         % ------------------------------------------------------------
         % Obtencion de la velocidad lineal y angular a partir de los 
@@ -426,7 +431,7 @@ function selct_ctr_CreateFcn(hObject, eventdata, handles)
     if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
         set(hObject,'BackgroundColor','white');
     end
-    select_ctrl = {"Mandani 4 IN", "Sugeno 2 IN", "Sugeno 4 IN (1)", "Sugeno 4 IN (2)"};
+    select_ctrl = {"Mandani 4 IN", "Sugeno 2 IN", "Sugeno 4 IN (1)", "Sugeno 4 IN (2)", "Sugeno 6"};
     set(hObject,"String", select_ctrl);
 % ========================================================================
 
