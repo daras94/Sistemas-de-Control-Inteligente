@@ -22,7 +22,7 @@ function varargout = AmigoBotGUI(varargin)
 
 % Edit the above text to modify the response to help AmigoBotGUI
 
-% Last Modified by GUIDE v2.5 06-Jan-2019 15:47:17
+% Last Modified by GUIDE v2.5 10-Jan-2019 11:27:43
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -182,7 +182,7 @@ function start_Callback(hObject, eventdata, handles)
     %%      Bucle de control finaliza al pulsar el botton parar.
     % --------------------------------------------------------------------
     distance   = zeros(1, num_sonar);
-    aux_labels = {handles.tx_d2, handles.tx_d3, handles.tx_d25, handles.tx_d16};
+    aux_labels = {handles.tx_in0, handles.tx_in1, handles.tx_in2, handles.tx_in3, handles.tx_in4, handles.tx_in5};
     while (1)
         % --------------------------------------------------------
         %Obtenemos la lectura de los sonares y el laser
@@ -234,7 +234,7 @@ function start_Callback(hObject, eventdata, handles)
         elseif (msg.Angular.Z < 0) && (msg.Angular.Z > -0.01)
             msg.Angular.Z = 0.0;
         end
-        send(pub, msg);     % Envio de la velocidad angular y lineal
+        send(pub, msg);         % Envio de la velocidad angular y lineal
         if isappdata(handles.figure1,'stop_bot')
             msg.Linear.X  = 0;
             msg.Angular.Z = 0;
@@ -242,12 +242,12 @@ function start_Callback(hObject, eventdata, handles)
             break
         else
             disp([input_dist, msg.Linear.X, msg.Angular.Z]);
-%             for i = 1 : length(input_dist)
-%                 set(aux_labels{i},  'String', num2str(input_dist(i)));
-%             end
+            for i = 1 : length(input_dist)
+                set(aux_labels{i},  'String', num2str(input_dist(i), 4));
+            end
             set(handles.tx_vl,  'String', num2str(msg.Linear.X));
             set(handles.tx_va,  'String', num2str(msg.Angular.Z));
-            waitfor(r);     % Temporizacion del bucle segun el valor de r 
+            waitfor(r);         % Temporizacion del bucle segun el valor de r 
         end
     end
     % --------------------------------------------------------------------
@@ -429,7 +429,7 @@ function selct_ctr_CreateFcn(hObject, eventdata, handles)
     if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
         set(hObject,'BackgroundColor','white');
     end
-    select_ctrl = {"Mandani 4 IN", "Sugeno 2 IN", "Sugeno 4 IN (1)", "Sugeno 4 IN (2)", "Sugeno 6 IN"};
+    select_ctrl = {"Mandani 4 IN {S2, S3, S1 - S4, S0 - S5}", "Sugeno 2 IN {S1, S4}", "Sugeno 4 IN {S1 al S4}", "Sugeno 4 IN {S0 al S3}", "Sugeno 6 IN {S0 al S5}"};
     set(hObject,"String", select_ctrl);
 % ========================================================================
 
@@ -439,30 +439,30 @@ function connect_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 %% ========================================================================
-hist_items = handles.hist.String;
-global msg_com;
-try
-    rosinit();  % Inicializacion de ROS en la IP correspondiente
-    set(handles.shutdown,'Enable','on');
-    set(handles.start,   'Enable','on');
-    disable_elem = {handles.connect, handles.ip_host, handles.ip_bot};
-    for i = 1 : length(disable_elem)
-        set(disable_elem{i}, 'Enable', 'off');
+    hist_items = handles.hist.String;
+    global msg_com;
+    try
+        rosinit();  % Inicializacion de ROS en la IP correspondiente
+        set(handles.shutdown,'Enable','on');
+        set(handles.start,   'Enable','on');
+        disable_elem = {handles.connect, handles.ip_host, handles.ip_bot};
+        for i = 1 : length(disable_elem)
+            set(disable_elem{i}, 'Enable', 'off');
+        end
+        msg_com = ' - Conexion establecida con ROS.';
+    catch ex
+        shutdown_Callback(hObject, eventdata, handles);
+        if (strcmp(ex.identifier,'robotics:ros:node:GlobalNodeRunningError'))
+            connect_Callback(hObject, eventdata, handles);
+        else
+            msg_com = ' - Error al establecer la Conexion con ROS.';
+            rethrow(ex); 
+        end
     end
-    msg_com = ' - Conexion establecida con ROS.';
-catch ex
-    shutdown_Callback(hObject, eventdata, handles);
-    if (strcmp(ex.identifier,'robotics:ros:node:GlobalNodeRunningError'))
-        connect_Callback(hObject, eventdata, handles);
+    if ~isempty(hist_items)
+        hist_items = cat(1, hist_items, {msg_com});
     else
-        msg_com = ' - Error al establecer la Conexion con ROS.';
-        rethrow(ex); 
+        hist_items = {msg_com};
     end
-end
-if ~isempty(hist_items)
-    hist_items = cat(1, hist_items, {msg_com});
-else
-    hist_items = {msg_com};
-end
-set(handles.hist, "String", hist_items); 
+    set(handles.hist, "String", hist_items); 
 % ========================================================================
