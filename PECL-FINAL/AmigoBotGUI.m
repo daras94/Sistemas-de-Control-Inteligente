@@ -229,11 +229,11 @@ function start_Callback(hObject, eventdata, handles)
 %         if (msg.Linear.X < 0.1)
 %             msg.Linear.X = 0.05;
 %         end
-        if (msg.Angular.Z > 0) && (msg.Angular.Z < 0.01)
-            msg.Angular.Z = 0.0;
-        elseif (msg.Angular.Z < 0) && (msg.Angular.Z > -0.01)
-            msg.Angular.Z = 0.0;
-        end
+%         if (msg.Angular.Z > 0) && (msg.Angular.Z < 0.01)
+%             msg.Angular.Z = 0.0;
+%         elseif (msg.Angular.Z < 0) && (msg.Angular.Z > -0.01)
+%             msg.Angular.Z = 0.0;
+%         end
         send(pub, msg);         % Envio de la velocidad angular y lineal
         if isappdata(handles.figure1,'stop_bot')
             msg.Linear.X  = 0;
