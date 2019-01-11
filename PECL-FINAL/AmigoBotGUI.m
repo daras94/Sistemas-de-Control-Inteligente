@@ -82,13 +82,14 @@ function start_Callback(hObject, eventdata, handles)
     set(handles.stop, 'Enable', 'on');   % Habilitamos el boton de parada.
     set(handles.start, 'Enable', 'off'); % Desabilitamos el boton de inicio.
     is_simulate = handles.simulador.Value;
+    disp(is_simulate);
     % -----------------------------------------------------------------
     %%                  DECLARACIÓN DE SUBSCRIBERS
     % -----------------------------------------------------------------
     switch is_simulate
         case 0
             o_sub_topic = '/pose';           % Topic robot real.
-            l_sub_topic = '/robot0/scan';    % Topic laser robot real.
+            l_sub_topic = '/scan';    % Topic laser robot real.
         case 1
             o_sub_topic = '/robot0/odom';    % Topic robot simulador.
             l_sub_topic = '/robot0/laser_1'; % Topic laser robot simulador.
@@ -100,14 +101,16 @@ function start_Callback(hObject, eventdata, handles)
     % ------------------------------------------------------------------
     num_sonar         = 6;
     sonars{num_sonar} = {};
+    robot_topic       = {'', '/robot0'};
     for i = 1 : num_sonar
-        sonar_id  = sprintf('/robot0/sonar_%d', (i - 1));
+        sonar_id  = sprintf('%s/sonar_%d', robot_topic{(is_simulate + 1)}, (i - 1));
         sonars{i} = rossubscriber(sonar_id, rostype.sensor_msgs_Range);
     end
     % -------------------------------------------------------------------
     %%                      DECLARACIÓN DE PUBLISHERS
     % -------------------------------------------------------------------
-    pub = rospublisher('/robot0/cmd_vel', 'geometry_msgs/Twist');
+    topic_id  = sprintf('%s/cmd_vel', robot_topic{(is_simulate + 1)});
+    pub = rospublisher(topic_id, 'geometry_msgs/Twist');
     if (is_simulate == 0)
         pub_enable = rospublisher('/cmd_motor_state', 'std_msgs/Int32'); % Para el robot real 
     end
@@ -118,7 +121,7 @@ function start_Callback(hObject, eventdata, handles)
     if (is_simulate == 0)
         msg_enable_motor  = rosmessage(pub_enable);
     end
-    msg_laser                = rosmessage(laser);
+    % msg_laser                = rosmessage(laser);
     msg_sonars{1, num_sonar} = {};
     for i = 1 : num_sonar 
         msg_sonars{1, i} = rosmessage(sonars{1, i});
@@ -175,6 +178,7 @@ function start_Callback(hObject, eventdata, handles)
     % Nos aseguramos recibir un mensaje relacionado con el robot
     % --------------------------------------------------------------------
     robot_topic = {'base_link', 'robot0'};
+    
     while (strcmp(odom.LatestMessage.ChildFrameId, robot_topic{(is_simulate + 1)}) ~= 1)
         odom.LatestMessage
     end
@@ -187,7 +191,7 @@ function start_Callback(hObject, eventdata, handles)
         % --------------------------------------------------------
         %Obtenemos la lectura de los sonares y el laser
         % --------------------------------------------------------
-        % msg_laser = receive(laser);       
+        %msg_laser = receive(laser);       
         for j = 1 : length(sonars)
             msg_sonars{1, j} = receive(sonars{1, j});
             % ---------------------------------------------------
