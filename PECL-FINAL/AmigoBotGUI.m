@@ -82,7 +82,6 @@ function start_Callback(hObject, eventdata, handles)
     set(handles.stop, 'Enable', 'on');   % Habilitamos el boton de parada.
     set(handles.start, 'Enable', 'off'); % Desabilitamos el boton de inicio.
     is_simulate = handles.simulador.Value;
-    disp(is_simulate);
     % -----------------------------------------------------------------
     %%                  DECLARACIÓN DE SUBSCRIBERS
     % -----------------------------------------------------------------
