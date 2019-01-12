@@ -186,83 +186,94 @@ function start_Callback(hObject, eventdata, handles)
     % --------------------------------------------------------------------
     distance   = zeros(1, num_sonar);
     aux_labels = {handles.tx_in0, handles.tx_in1, handles.tx_in2, handles.tx_in3, handles.tx_in4, handles.tx_in5};
-    while (1)
-        % --------------------------------------------------------
-        %Obtenemos la lectura de los sonares y el laser
-        % --------------------------------------------------------
-        %msg_laser = receive(laser);       
-        for j = 1 : length(sonars)
-            msg_sonars{1, j} = receive(sonars{1, j});
-            % ---------------------------------------------------
-            % Distancia medida por el sonar i
-            % ---------------------------------------------------
-            distance(1, j) = double(msg_sonars{1, j}.Range_);
-            if (isinf(distance(1, j)))
-                if (distance(1, j) > 0)
-                    distance(1, j) = 5.0;
-                else
-                    distance(1, j) = 0.1;
+    try 
+        while (1)
+            % --------------------------------------------------------
+            %Obtenemos la lectura de los sonares y el laser
+            % --------------------------------------------------------
+            % msg_laser = receive(laser);       
+            for j = 1 : length(sonars)
+                msg_sonars{1, j} = receive(sonars{1, j});
+                % ---------------------------------------------------
+                % Distancia medida por el sonar i
+                % ---------------------------------------------------
+                distance(1, j) = double(msg_sonars{1, j}.Range_);
+                if (isinf(distance(1, j)))
+                    if (distance(1, j) > 0)
+                        distance(1, j) = 5.0;
+                    else
+                        distance(1, j) = 0.1;
+                    end
                 end
             end
-        end
-        d0 = distance(1, 1);
-        d1 = distance(1, 2);
-        d2 = distance(1, 3);
-        d3 = distance(1, 4);
-        d4 = distance(1, 5);
-        d5 = distance(1, 6);
-        switch (opc)
-            case 1
-                input_dist = [d2, d3, d1 - d4, d0 - d5];
-            case 2
-                input_dist = [d1, d4];
-            case 3
-                input_dist = [d1, d2, d3, d4];
-            case 4
-                input_dist = [d0, d1, d4, d5];
-            case 5
-                input_dist = [d0, d1, d2, d3, d4, d5];
-        end   
-        % ------------------------------------------------------------
-        % Obtencion de la velocidad lineal y angular a partir de los 
-        % controladores borrosos.
-        % ------------------------------------------------------------
-        msg.Angular.Z = evalfis(fismat_ang, input_dist);
-        msg.Linear.X  = evalfis(fismat_vel, input_dist);
-%         if (msg.Linear.X < 0.1)
-%             msg.Linear.X = 0.05;
-%         end
-%         if (msg.Angular.Z > 0) && (msg.Angular.Z < 0.01)
-%             msg.Angular.Z = 0.0;
-%         elseif (msg.Angular.Z < 0) && (msg.Angular.Z > -0.01)
-%             msg.Angular.Z = 0.0;
-%         end
-        send(pub, msg);         % Envio de la velocidad angular y lineal
-        if isappdata(handles.figure1,'stop_bot')
-            msg.Linear.X  = 0;
-            msg.Angular.Z = 0;
-            send(pub, msg);     % Envio de la velocidad angular y lineal
-            break
-        else
-            disp([input_dist, msg.Linear.X, msg.Angular.Z]);
-            for i = 1 : length(input_dist)
-                set(aux_labels{i},  'String', num2str(input_dist(i), 4));
+            d0 = distance(1, 1);
+            d1 = distance(1, 2);
+            d2 = distance(1, 3);
+            d3 = distance(1, 4);
+            d4 = distance(1, 5);
+            d5 = distance(1, 6);
+            switch (opc)
+                case 1
+                    input_dist = [d2, d3, d1 - d4, d0 - d5];
+                case 2
+                    input_dist = [d1, d4];
+                case 3
+                    input_dist = [d1, d2, d3, d4];
+                case 4
+                    input_dist = [d0, d1, d4, d5];
+                case 5
+                    input_dist = [d0, d1, d2, d3, d4, d5];
+            end   
+            % ------------------------------------------------------------
+            % Obtencion de la velocidad lineal y angular a partir de los 
+            % controladores borrosos.
+            % ------------------------------------------------------------
+            msg.Angular.Z = evalfis(fismat_ang, input_dist);
+            msg.Linear.X  = evalfis(fismat_vel, input_dist);    
+%             if (msg.Linear.X < 0.1)
+%                 msg.Linear.X = 0.05;
+%             end
+%             if (msg.Angular.Z > 0) && (msg.Angular.Z < 0.01)
+%                 msg.Angular.Z = 0.0;
+%             elseif (msg.Angular.Z < 0) && (msg.Angular.Z > -0.01)
+%                 msg.Angular.Z = 0.0;
+%             end
+            send(pub, msg);         % Envio de la velocidad angular y lineal
+            if isappdata(handles.figure1,'stop_bot')
+                msg.Linear.X  = 0;
+                msg.Angular.Z = 0;
+                send(pub, msg);     % Envio de la velocidad angular y lineal
+                break
+            else
+                disp([input_dist, msg.Linear.X, msg.Angular.Z]);
+                for i = 1 : length(input_dist)
+                    set(aux_labels{i},  'String', num2str(input_dist(i), 4));
+                end
+                set(handles.tx_vl,  'String', num2str(msg.Linear.X));
+                set(handles.tx_va,  'String', num2str(msg.Angular.Z));
+                waitfor(r);         % Temporizacion del bucle segun el valor de r 
             end
-            set(handles.tx_vl,  'String', num2str(msg.Linear.X));
-            set(handles.tx_va,  'String', num2str(msg.Angular.Z));
-            waitfor(r);         % Temporizacion del bucle segun el valor de r 
         end
-    end
-    % --------------------------------------------------------------------
-    %%                      DESACTIVACION DE LOS MOTORES 
-    % --------------------------------------------------------------------
-    if (is_simulate == 0)
-        % -----------------------------------------
-        % Para el robot real desactivamos los moto-
-        % res enviando enable_motor = 0.
-        % -----------------------------------------
-        msg_enable_motor.Data = 1;
-        send(pub_enable, msg_enable_motor);
+        % --------------------------------------------------------------------
+        %%                      DESACTIVACION DE LOS MOTORES 
+        % --------------------------------------------------------------------
+        if (is_simulate == 0)
+            % -----------------------------------------
+            % Para el robot real desactivamos los moto-
+            % res enviando enable_motor = 0.
+            % -----------------------------------------
+            msg_enable_motor.Data = 1;
+            send(pub_enable, msg_enable_motor);
+        end
+    catch
+        hist_items = handles.hist.String;
+        msg_stop   = " - Se Perdio la conexion con el Robot.";   
+        if ~isempty(hist_items)
+            hist_items = cat(1, hist_items, {msg_stop});
+        else
+            hist_items = {msg_stop};
+        end
+        set(handles.hist, "String", hist_items);  
     end
     set(handles.start, 'Enable', 'on');    % Habilitamos el boton de inicio.
     set(handles.stop, 'Enable', 'off');    % Desabilitamos el boton de parada.
