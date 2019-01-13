@@ -366,7 +366,7 @@ function ip_host_CreateFcn(hObject, eventdata, handles)
         [~, result]  = system('ifconfig | sed -En "s/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p"');
     elseif ispc
         [~, result]  = system('ipconfig | findstr /r "IPv4.*[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*"');
-		result       = replace(result,'   Direcci�n IPv4. . . . . . . . . . . . . . : ','');
+		result       = replace(result,'   Direcci\u00F3n IPv4. . . . . . . . . . . . . . : ','');
     else
         disp('Platform not supported')
     end
@@ -423,11 +423,14 @@ function ed_ctrl_Callback(hObject, eventdata, handles)
             anfisedit ./controller/neuro/vel_lin_1-4.fis;
             anfisedit ./controller/neuro/vel_angu_1-4.fis;
         case 3
-            anfisedit ./controller/neuro/vel_lin_1234p.fis;
-            anfisedit ./controller/neuro/vel_angu_1234p.fis;
+            anfisedit ./controller/neuro/vel_lin_1234h.fis;
+            anfisedit ./controller/neuro/vel_angu_1234h.fis;
         case 4
             anfisedit ./controller/neuro/vel_lin_0145.fis;
             anfisedit ./controller/neuro/vel_angu_0145.fis;
+        case 5
+            anfisedit ./controller/neuro/vel_lin_012345.fis;
+            anfisedit ./controller/neuro/vel_angu_012345.fis;
     end
 % ========================================================================
 
@@ -443,7 +446,7 @@ function selct_ctr_CreateFcn(hObject, eventdata, handles)
     if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
         set(hObject,'BackgroundColor','white');
     end
-    select_ctrl = {"Mandani 4 IN {S2, S3, S1 - S4, S0 - S5}", "Sugeno 2 IN {S1, S4}", "Sugeno 4 IN {S1 al S4}", "Sugeno 4 IN {S0 al S3}", "Sugeno 6 IN {S0 al S5}"};
+    select_ctrl = {"Mandani 4 IN {S2, S3, S1 - S4, S0 - S5}", "Sugeno 2 IN {S1, S4}", "Sugeno 4 IN {S1 al S4}", "Sugeno 4 IN {S0, S1, S4 y S3}", "Sugeno 6 IN {S0 al S5}"};
     set(hObject,"String", select_ctrl);
 % ========================================================================
 

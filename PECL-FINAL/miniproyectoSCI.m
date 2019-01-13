@@ -11,7 +11,7 @@ function miniproyectoSCI()
 
     % Incialzacion del sonar.
     % ------------------------------------------------------------------------
-    num_sonar         = 8;
+    num_sonar         = 6;
     sonars{num_sonar} = {};
     for i = 1 : num_sonar
         sonar_id  = sprintf('/robot0/sonar_%d', (i - 1));
@@ -36,8 +36,8 @@ function miniproyectoSCI()
     %% ===================================================================
     % Lectura de los controladores borrosos
     % ====================================================================
-    % fismatV = readfis('./controller/fuzzy/anfisV2.fis');                % Controlador de velocidad lineal
-    fismatW = readfis('./controller/fuzzy/anfisWDD_v2.fis');              % Controlador de velocidad angular
+    fismat_vel = readfis('./controller/fuzzy/anfisV2_4IN.fis');              % Controlador de velocidad lineal
+    fismat_ang = readfis('./controller/fuzzy/anfisWDD_4IN.fis');              % Controlador de velocidad angular
 
     %% Rellenamos los campos del mensaje para que el robot avance a 0.2 m/s
     %
@@ -100,7 +100,7 @@ function miniproyectoSCI()
             distance(1, j) = double(msg_sonars{1, j}.Range_);
             if (isinf(distance(1, j)))
                 if (distance(1, j) > 0)
-                    distance(1, j) = 4.5;
+                    distance(1, j) = 5;
                 else
                     distance(1, j) = 0.1;
                 end
@@ -115,20 +115,16 @@ function miniproyectoSCI()
         % Obtencion de la velocidad lineal y angular a partir de los 
         % controladores borrosos.
         % ------------------------------------------------------------
-%         vel_lineal = 0.2; % evalfis([d2, d3, in_c1, in_c2], fismatV);
-        output     = evalfis([d2, d3, in_c1, in_c2], fismatW);
-        vel_ang    = output(1, 1);
-        vel_lineal = output(1, 2);
-        if (vel_lineal < 0.1)
-            msg.Linear.X = 0.05;
-        else
-            msg.Linear.X = vel_lineal;
-        end
-        if (vel_ang > -0.01) && (vel_ang < 0.01)
-            msg.Angular.Z = 0.0;
-        else
-            msg.Angular.Z = vel_ang;
-        end
+        msg.Angular.Z = evalfis(fismat_ang, [d2, d3, in_c1, in_c2]);
+        msg.Linear.X  = evalfis(fismat_vel, [d2, d3, in_c1, in_c2]);    
+%         if (msg.Linear.X < 0.1)
+%             msg.Linear.X = 0.05;
+%         end
+%         if (msg.Angular.Z > 0) && (msg.Angular.Z < 0.01)
+%             msg.Angular.Z = 0.0;
+%         elseif (msg.Angular.Z < 0) && (msg.Angular.Z > -0.01)
+%             msg.Angular.Z = 0.0;
+%         end
         disp([d2, d3, in_c1, in_c2, msg.Linear.X, msg.Angular.Z]);
         send(pub, msg);                                  % Envio de la velocidad
         waitfor(r);                                      % Temporizaci�n del bucle seg�n el par�metro establecido en r
